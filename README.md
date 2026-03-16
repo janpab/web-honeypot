@@ -21,10 +21,10 @@ Rozwiązanie: Zastosowałem techniki Active Baiting. Spreparowałem fałszywe zr
 Rezultat
 Projekt w pełni spełnił swoje zadanie. Dzięki integracji ze Splunkiem mam obecnie pełną widoczność złośliwego ruchu w czasie rzeczywistym. Widzę, jakie narzędzia (User-Agents) są używane do skanowania, z jakich krajów pochodzą najczęstsze ataki i jakich ukrytych ścieżek (np. /.env, /wp-admin, /backup.sql) najchętniej szukają dzisiejsze boty.
 
-
-
+<h1>1. Kraje</h1>
 <img width="936" height="382" alt="image" src="https://github.com/user-attachments/assets/f4b592ab-1f92-4a57-aac8-1075602c517b" />
-
+<br>
+<h1>2. URL-e</h1>
 <img width="944" height="356" alt="image" src="https://github.com/user-attachments/assets/b3f7758e-413e-45cc-81a8-2ed3dbfd63b1" />
 
 <br><br>
