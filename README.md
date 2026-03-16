@@ -27,5 +27,7 @@ Projekt w pełni spełnił swoje zadanie. Dzięki integracji ze Splunkiem mam ob
 
 <img width="944" height="356" alt="image" src="https://github.com/user-attachments/assets/b3f7758e-413e-45cc-81a8-2ed3dbfd63b1" />
 
+<br><br>
+<h1>3. User Agents</h1>
 <img width="890" height="357" alt="image" src="https://github.com/user-attachments/assets/e399a54a-2237-4655-a7ba-d8c4f3df21af" />
 Większość zapytań to leniwy Brute-Force z curla. Okoła 200 zapytań z udawanych Chrome i Safari oraz 15 zapytań z ClaudeBota możliwe że pochodz z Pastebina lub rejsetrów certyfikatów.
