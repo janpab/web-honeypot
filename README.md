@@ -38,7 +38,7 @@ Największym zainteresowaniem cieszyły się pliki konfiguracyjne oraz backupy b
 <br><br>
 
 3. User Agents & Profilowanie Narzędzi
-<img width="1781" height="714" alt="image" src="https://github.com/user-attachments/assets/735372b8-1bcd-4678-81a5-14ae77d1aab0" />
+<img width="865" height="343" alt="image" src="https://github.com/user-attachments/assets/54f9131f-b2ea-47ca-95c5-0e4d12b2462d" />
 
 Większość zapytań to agresywne skanowanie za pomocą curl. Odnotowano również:
 
