@@ -1,33 +1,43 @@
-Projekt to autorski Web Honeypot (pułapka na skanery, boty hakerskie i bug-hunterów), symulujący wyciek wewnętrznego panelu deweloperskiego firmy z sektora energetycznego (energysystems.uk).
-Celem projektu było stworzenie środowiska, które w sposób zautomatyzowany zbiera, parsuje i wizualizuje złośliwy ruch sieciowy (skanowanie podatności, próby logowania, scraping) przy wykorzystaniu bardzo ograniczonych zasobów serwerowych, wspomagając się chmurą i lokalnym systemem analitycznym.
-Wykorzystane technologie: Nginx (Custom JSON Logging), Cloudflare (DNS/SSL), Linux, Splunk Enterprise
+🍯 Industrial Web Honeypot & SIEM Integration
+Autorski Web Honeypot symulujący wyciek panelu deweloperskiego firmy energetycznej (energysystems.uk). System automatycznie zbiera, parsuje i wizualizuje próby ataków, scraping oraz skanowanie podatności w czasie rzeczywistym.
 
+🏗️ Architektura Systemu
+Ze względu na ograniczenia hostingu (Mikrus – współdzielony adres IP, niestandardowy port), zastosowano model hybrydowy:
 
-Ze względu na ograniczenia hostingu (Mikrus – współdzielony adres IP, przydzielony niestandardowy port), architektura została zaprojektowana w modelu hybrydowym:
-Frontend (Cloudflare): Obsługuje ruch HTTPS, maskuje prawdziwy port serwera i nadaje domenie wiarygodność (Flexible SSL).
-Backend (VPS): Nginx nasłuchujący na niestandardowym porcie. Serwuje specjalnie spreparowaną stronę (pułapkę) HTML oraz plik security.txt z fałszywą ofertą Bug Bounty. Loguje każde zapytanie w formacie JSON.
-Log Collector (Lokalny Host): Skrypt PowerShell pracujący w pętli, cyklicznie pobierający logi JSON przez protokół SCP (SSH) bez obciążania serwera VPS.
-SIEM (Splunk): Lokalna instancja Splunk Enterprise, która na bieżąco analizuje pobrane pliki i generuje dasboardy (Top IP, GeoIP, Target URLs).
+Frontend (Cloudflare): Obsługuje ruch HTTPS na porcie 443, maskuje port źródłowy VPS-a i nadaje domenie wiarygodność przez Flexible SSL.
 
+Backend (VPS): Nginx na niestandardowym porcie serwujący "pułapkę" HTML oraz plik security.txt z fałszywą ofertą Bug Bounty. Logowanie odbywa się do formatu JSON.
 
-Problemy: 
-Środowisko VPS nie posiadało własnego adresu IPv4, a jedynie przypisany niestandardowy port (np. 3369). Uniemożliwiało to standardową weryfikację domeny przez Let's Encrypt (Certbot zawsze wymusza ruch przez port 80), co skutkowało błędami 404 i blokadami (Rate Limits) ze strony organu certyfikującego.
-Rozwiązanie: Zrezygnowałem z lokalnego certyfikatu na rzecz Cloudflare Proxy. Włączenie trybu Flexible SSL w Cloudflare pozwoliło wystawić certyfikat brzegowy (Edge Certificate) na porcie 443 dla użytkowników/botów, podczas gdy ruch do serwera docelowego był tunelowany po zwykłym HTTP na mój niestandardowy port.
+Log Collector: Skrypt PowerShell (Lokalny Host) pracujący w pętli, pobierający logi przez SCP (SSH) bez obciążania zasobów VPS.
 
-Jak przyciągnąć atakujących (Problem "Zimnego Startu")
-Problem: Nowa subdomena z dala od głównych skanerów była omijana przez boty. Samo postawienie serwera nie generowało ruchu.
-Rozwiązanie: Zastosowałem techniki Active Baiting. Spreparowałem fałszywe zrzuty kodu i logów konfiguracyjnych sugerujące wyciek z infrastruktury krytycznej (SCADA/Industrial), które opublikowałem w serwisach takich jak Pastebin i urlscan.io. Dodatkowo wdrożyłem prowokujący plik /.well-known/security.txt z obietnicą wysokiej nagrody za znalezienie błędu, co błyskawicznie przyciągnęło zautomatyzowane skanery "bug bounty".
+SIEM (Splunk): Lokalna instancja analizująca dane i generująca dashboardy analityczne.
 
-Rezultat
-Projekt w pełni spełnił swoje zadanie. Dzięki integracji ze Splunkiem mam obecnie pełną widoczność złośliwego ruchu w czasie rzeczywistym. Widzę, jakie narzędzia (User-Agents) są używane do skanowania, z jakich krajów pochodzą najczęstsze ataki i jakich ukrytych ścieżek (np. /.env, /wp-admin, /backup.sql) najchętniej szukają dzisiejsze boty.
+🛠️ Rozwiązane Problemy
+1. Wyzwania Sieciowe & SSL
+Problem: Brak własnego adresu IPv4 i portu 80/443 uniemożliwiał standardową certyfikację Let's Encrypt.
+Rozwiązanie: Wykorzystanie Cloudflare Proxy. Pozwoliło to na wystawienie certyfikatu brzegowego (Edge Certificate) na standardowym porcie 443, podczas gdy ruch do serwera docelowego tunelowany był po HTTP na niestandardowy port (np. 3369).
 
-<h1>1. Kraje</h1>
-<img width="936" height="382" alt="image" src="https://github.com/user-attachments/assets/f4b592ab-1f92-4a57-aac8-1075602c517b" />
-<br>
-<h1>2. URL-e</h1>
-<img width="944" height="356" alt="image" src="https://github.com/user-attachments/assets/b3f7758e-413e-45cc-81a8-2ed3dbfd63b1" />
+2. Problem "Zimnego Startu" (Active Baiting)
+Problem: Nowa domena nie generowała ruchu botów.
+Rozwiązanie: Zastosowanie technik nęcenia hakerów:
 
-<br><br>
-<h1>3. User Agents</h1>
-<img width="890" height="357" alt="image" src="https://github.com/user-attachments/assets/e399a54a-2237-4655-a7ba-d8c4f3df21af" />
-Większość zapytań to leniwy Brute-Force z curla. Okoła 200 zapytań z udawanych Chrome i Safari oraz 15 zapytań z ClaudeBota możliwe że pochodz z Pastebina lub rejsetrów certyfikatów.
+Publikacja fałszywych logów sugerujących wyciek infrastruktury SCADA/Industrial na serwisach Pastebin oraz urlscan.io.
+
+Wdrożenie pliku /.well-known/security.txt z obietnicą nagrody ($5000), co przyciągnęło skanery grup Bug Bounty.
+
+📊 Analiza Wyników (Dashboardy Splunk)
+1. Geolokalizacja Atakujących
+Analiza adresów IP wykazała szerokie spektrum geograficzne napastników, z przewagą zautomatyzowanych skanerów z centrów danych.
+
+2. Analiza Targetowanych URL-i
+Największym zainteresowaniem cieszyły się pliki konfiguracyjne oraz backupy bazy danych. Boty natychmiast po wejściu na stronę główną próbowały uzyskać dostęp do ukrytych ścieżek zdefiniowanych w kodzie jako "pułapki".
+
+3. User Agents & Profilowanie Narzędzi
+Większość zapytań to agresywne skanowanie za pomocą curl. Odnotowano również:
+
+~200 zapytań: Zaawansowane headles-browsery (Chrome/Safari), próbujące ominąć proste filtry anty-botowe.
+
+15 zapytań: ClaudeBot (AI Anthropic) – co potwierdza, że domena została szybko zaindeksowana po publikacji w rejestrach certyfikatów.
+
+🚀 Wnioski
+Projekt udowodnił, że przy minimalnych nakładach finansowych można stworzyć skuteczne narzędzie do monitorowania Threat Intelligence. System pozwolił na zidentyfikowanie najczęstszych wektorów ataku (polowanie na pliki .env, .git/config oraz exploity WordPressa) stosowanych obecnie przez zautomatyzowane sieci botów.
