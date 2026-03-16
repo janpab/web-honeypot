@@ -17,7 +17,7 @@ SIEM (Splunk): Lokalna instancja analizująca dane i generująca dashboardy anal
 Problem: Brak własnego adresu IPv4 i portu 80/443 uniemożliwiał standardową certyfikację Let's Encrypt.
 Rozwiązanie: Wykorzystanie Cloudflare Proxy. Pozwoliło to na wystawienie certyfikatu brzegowego (Edge Certificate) na standardowym porcie 443, podczas gdy ruch do serwera docelowego tunelowany był po HTTP na niestandardowy port (np. 3369).
 
-2. Problem "Zimnego Startu" (Active Baiting)
+2. Problem Active Baiting
 Problem: Nowa domena nie generowała ruchu botów.
 Rozwiązanie: Zastosowanie technik nęcenia hakerów:
 
