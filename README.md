@@ -27,12 +27,17 @@ Wdrożenie pliku /.well-known/security.txt z obietnicą nagrody ($5000), co przy
 
 📊 Analiza Wyników (Dashboardy Splunk)
 1. Geolokalizacja Atakujących
+<img width="1872" height="763" alt="image" src="https://github.com/user-attachments/assets/20bdc3e6-e5e8-4637-8017-e383e0addde7" />
 Analiza adresów IP wykazała szerokie spektrum geograficzne napastników, z przewagą zautomatyzowanych skanerów z centrów danych.
 
 2. Analiza Targetowanych URL-i
+<img width="890" height="357" alt="image" src="https://github.com/user-attachments/assets/53f8c8fc-d886-4dba-a273-a18e36efb534" />
+
 Największym zainteresowaniem cieszyły się pliki konfiguracyjne oraz backupy bazy danych. Boty natychmiast po wejściu na stronę główną próbowały uzyskać dostęp do ukrytych ścieżek zdefiniowanych w kodzie jako "pułapki".
 
 3. User Agents & Profilowanie Narzędzi
+<img width="768" height="308" alt="image" src="https://github.com/user-attachments/assets/648076a3-c517-46fd-a005-e611d02fd446" />
+
 Większość zapytań to agresywne skanowanie za pomocą curl. Odnotowano również:
 
 ~200 zapytań: Zaawansowane headles-browsery (Chrome/Safari), próbujące ominąć proste filtry anty-botowe.
